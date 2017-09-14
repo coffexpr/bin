@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+from datetime import datetime
+import os
+import subprocess
+import sys
+import time
+
+
+def get_mtime(file_name):
+    return os.stat(file_name).st_mtime
+
+
+def main(target_file, command):
+    mtime = get_mtime(target_file)
+    while True:
+        time.sleep(1)
+        new_mtime = get_mtime(target_file)
+        if mtime != new_mtime:
+            mtime = new_mtime
+            subprocess.run(command, shell=True)
+            print('updated: {}'.format(datetime.now()))
+
+
+if __name__ == '__main__':
+    target_file = sys.argv[1]
+    command = sys.argv[2]
+
+    main(target_file, command)
